@@ -1,0 +1,4 @@
+request => parsing body => logging => setting headers => router
+incoming |   middleware | middleware | middleware | middleware |
+===============================================================>
+request - response cycle 
