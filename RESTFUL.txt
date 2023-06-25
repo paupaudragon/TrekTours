@@ -1,0 +1,25 @@
+REST: 
+
+1. Separate API into logical resource
+- tours users reviews 
+
+2. Expose structured resource-based URLs
+- https://www.natours.com/addNewTour
+- addNewTour is the end point 
+
+3. Use HTTP methods
+- /getTour is bad =>  identify *GET* request /tours/7
+- /addATour => *POST*
+- /updateTour => *PUT* *PATCH*
+- /deleteTour => *DELETE*
+
+4. Send data as JSON
+
+5. Be stateless
+All state is handles on the client not the server. 
+- Each request must contain al the information necessary to process a certain request. 
+- The server doesnt need to remember preious requests.
+
+currentPage = 5 => move to 6
+
+
