@@ -2,8 +2,8 @@
 const express = require('express')
 const app = express()
 
-app.get('/', (req, res)=>{
-    res.status(200).send('hello from the server side')
+app.get('/api/v1/tours', (req, res)=>{
+    
 })
 
 
