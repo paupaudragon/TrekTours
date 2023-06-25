@@ -63,6 +63,42 @@ app.post("/api/v1/tours", (req, res) => {
   console.log(req.body);
 });
 
+//********* Patch *************
+//not implememted
+app.patch('/api/v1/tours/:id', (req, res)=>{
+
+    const tour = allTours.find((el)=>el.id === Number(req.params.id)) //also could use req.params.id *1 ti convert string to number
+    if(!tour){
+        return res.status(404).json({
+            status: 'fail',
+            message: "not found tour"
+        })
+    }
+
+    res.status(200).json({
+        status: 'success', 
+        data: {
+            tour: 'Updated'
+        }
+    })
+})
+
+//********* Delete *************
+app.delete('/api/v1/tours/:id', (req, res)=>{
+
+    const tour = allTours.find((el)=>el.id === Number(req.params.id)) //also could use req.params.id *1 ti convert string to number
+    if(!tour){
+        return res.status(404).json({
+            status: 'fail',
+            message: "not found tour"
+        })
+    }
+
+    res.status(204).json({
+        status: 'success', 
+        data: null
+    })
+})
 
 //start the server
 const port = 3000;
