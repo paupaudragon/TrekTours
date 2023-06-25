@@ -7,8 +7,5 @@
     "start": "app.js"
   },
   "author": "Tingting Zhou",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^4.18.2"
-  }
+  "license": "ISC"
 }
