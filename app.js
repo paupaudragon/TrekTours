@@ -23,6 +23,26 @@ app.get("/api/v1/tours", (req, res) => {
   });
 });
 
+// req.params/:x/:y? defined params and optional params
+app.get("/api/v1/tours/:id", (req, res) => {
+
+    console.log(req.params)
+
+    const tour = allTours.find((el)=>el.id === Number(req.params.id)) //also could use req.params.id *1 ti convert string to number
+    if(!tour){
+        return res.status(404).json({
+            status: 'fail',
+            message: "not found tour"
+        })
+    }
+    res.status(200).json({
+      status: "success",
+      data: {
+        tours: tour,
+      },
+    });
+  });
+
 //********* Post *************
 app.post("/api/v1/tours", (req, res) => {
   const newID = allTours[allTours.length - 1].id + 1; // last tour id+1
@@ -42,6 +62,7 @@ app.post("/api/v1/tours", (req, res) => {
 
   console.log(req.body);
 });
+
 
 //start the server
 const port = 3000;
