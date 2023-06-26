@@ -1,0 +1,30 @@
+Bson: data format that MOngoDb uses for data storage. Like Json but it's typed; 
+fields, embeded documents
+Embedding/denormalizing: including related data into a single document. This allows quick access and easier data models.
+
+How to connect mongosh to online MOngo atlas:
+PS C:\Users\owner> mongosh "mongodb+srv://cluster0.wydsgzk.mongodb.net/" --apiVersion 1 --username tzhou
+Enter password: **********
+Current Mongosh Log ID: 6499e2c346781dafe43188da
+Connecting to:          mongodb+srv://<credentials>@cluster0.wydsgzk.mongodb.net/?appName=mongosh+1.6.1
+Using MongoDB:          6.0.6 (API Version 1)
+Using Mongosh:          1.6.1
+
+For mongosh info see: https://docs.mongodb.com/mongodb-shell/
+
+Atlas atlas-oadspl-shard-0 [primary] test> show dbs
+Natours   40.00 KiB
+admin    336.00 KiB
+local     33.46 GiB
+Atlas atlas-oadspl-shard-0 [primary] test> use Natours
+switched to db Natours
+Atlas atlas-oadspl-shard-0 [primary] Natours> db.tours.find()
+[
+  {
+    _id: ObjectId("6499e1cef9677c354d66a528"),
+    name: 'The Forest Hike',
+    price: 297,
+    rating: 4.7
+  }
+]
+Atlas atlas-oadspl-shard-0 [primary] Natours>
