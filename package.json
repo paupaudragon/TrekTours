@@ -4,7 +4,7 @@
   "description": "Make a hiking tour website",
   "main": "app.js",
   "scripts": {
-    "start": "app.js"
+    "start": "nodemon server.js"
   },
   "author": "Tingting Zhou",
   "license": "ISC",

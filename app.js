@@ -1,5 +1,4 @@
 // setup express
-const fs = require("fs");
 
 const express = require("express");
 const app = express();
@@ -19,8 +18,4 @@ app.use(morgan('tiny'))//tiny
 app.use('/api/v1/tours', tourRouter)
 app.use('/api/v1/users', userRouter)
 
-//start the server
-const port = 3000;
-app.listen(port, () => {
-  console.log("listening on 3000");
-});
+module.exports = app;
