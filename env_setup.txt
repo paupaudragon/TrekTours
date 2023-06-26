@@ -1,0 +1,10 @@
+$env:NODE_ENV="development"
+run: nodemon server.js
+
+define in package.json: 
+  "scripts": {
+    "start:dev": "nodemon server.js", 
+    "start:prod": "set NODE_ENV=\"production\" && nodemon server.js"
+  }
+
+  command: npm run start:dev
