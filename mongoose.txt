@@ -1,0 +1,6 @@
+Mongoose: 
+1. higher level Object Data Modeling library for MongoDB and Node
+2. Allows for rapid and simple development of MongoDB database interaction 
+3. schemas to model data and relationships, easy data validation, simple query API, middleware
+4. Mongoose schema: define the structure of data, defualt values, and validation
+5. Mongoose model: a wrapper for the schema, providing an interface to the database for CRUD
