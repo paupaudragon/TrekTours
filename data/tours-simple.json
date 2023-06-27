@@ -205,42 +205,5 @@
             "2022-01-16,10:00",
             "2022-12-12,10:00"
         ]
-    },
-    {
-        "id": 9,
-        "name": "Test Tour",
-        "duration": 10,
-        "difficulty": "easy"
-    },
-    {
-        "id": 10,
-        "name": "Test Tour",
-        "duration": 10,
-        "difficulty": "easy"
-    },
-    {
-        "id": 11,
-        "name": "Test Info validation",
-        "duration": 3,
-        "difficulty": "easy"
-    },
-    {
-        "id": 12,
-        "name": "Test Info validation",
-        "duration": 3,
-        "difficulty": "easy"
-    },
-    {
-        "id": 13,
-        "name": "Test Info validation",
-        "duration": 3,
-        "difficulty": "easy"
-    },
-    {
-        "id": 14,
-        "name": "Test Info validation",
-        "duration": 3,
-        "difficulty": "easy",
-        "price": 1
     }
 ]
