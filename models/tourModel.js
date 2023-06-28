@@ -4,6 +4,8 @@
  * 2. Virtural properties (duration(days)=>weeks)
  * 3. Mongoose middleware:
  *  a. Dcument middleware
+ *  b. Query middleware
+ *  c. Aggregation middleware
 */
 const mongoose = require("mongoose");
 const slugify = require("slugify"); //turn "Test tour" to "Test-tour"
@@ -70,6 +72,10 @@ const tourSchema = new mongoose.Schema({
     select: false, //hide data from user
   },
   startDates: [Date],
+  secretTour:{
+    type: Boolean,
+    default:false
+  }
 }, 
 {
   toJSON:{virtuals: true}, //schema options
@@ -98,6 +104,34 @@ tourSchema.pre('save', function(next){
 //   next()
 
 // })
+
+// Query Middleware
+// Runs before find() method
+// Tour.find() is called in getAllTours
+tourSchema.pre(/^find/, function(next){ //regular expression: anything started with find
+  //This key word is pointed to the query
+  this.find({secretTour: {$ne:true}}) //some tour doesnt have this property
+  this.start = Date.now()
+  next()
+})
+
+tourSchema.post(/^find/, function(docs, next){
+  console.log(`Query took ${Date.now()-this.start} milliseconds`)
+  //console.log(docs)
+  next()
+})
+
+// Aggregation Middleware
+// this = current aggragation object
+tourSchema.pre('aggregate', function(next){
+  this.pipeline().unshift({$match:{secretTour:{$ne:true}}}) // exclude the secret tour
+  console.log(this)
+  next()
+})
+
+
+
+
 
 const Tour = mongoose.model("Tour", tourSchema);
 module.exports = Tour;
