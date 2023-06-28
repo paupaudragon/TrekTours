@@ -1,3 +1,12 @@
+/*
+This is a controller for the tour resource.
+1. Tour aliasing 
+2. CRUD of tours
+3. Aggregations:
+    a. Tour stats
+    b. Monthly plan data
+*/
+
 const Tour = require("./../models/tourModel");
 const APIFeatures = require("./../utils/apiFeatures");
 

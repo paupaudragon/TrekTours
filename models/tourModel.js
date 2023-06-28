@@ -1,4 +1,12 @@
+/*
+This is the tour data model using mongoose.
+1. Data models based on the MongoDB documents.
+2. Virtural properties (duration(days)=>weeks)
+3. Mongoose middleware:
+    a. Dcument middleware: pre/post
+*/
 const mongoose = require("mongoose");
+const slugify = require("slugify"); //turn "Test tour" to "Test-tour"
 
 //Create a schema
 const tourSchema = new mongoose.Schema({
@@ -7,6 +15,11 @@ const tourSchema = new mongoose.Schema({
     required: [true, "Tour must have a name"],
     unique: true,
     trim: true,
+  },
+  slug:{
+
+    type: String,
+
   },
   duration: {
     type: Number,
@@ -68,6 +81,23 @@ tourSchema.virtual("durationWeeks").get(function () {
   //only function() can provide this key word
   return this.duration / 7; // how many weeks
 });
+
+// Pre middleware
+// Document middleware: runs before .save() and .create()
+tourSchema.pre('save', function(next){
+  this.slug = slugify(this.name, {lower: true}) // this means the current document that's being saved
+  next()
+})
+
+// tourSchema.pre('save', function(next){
+//   console.log('Will save the doc')
+//   next()
+// })
+// tourSchema.post('save', function(doc, next){
+//   console.log(doc)
+//   next()
+
+// })
 
 const Tour = mongoose.model("Tour", tourSchema);
 module.exports = Tour;

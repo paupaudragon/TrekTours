@@ -1,3 +1,7 @@
+/*
+This is a controller for user resource. 
+TODO:
+*/
 exports.getAllUsers = (req, res)=>{
     res.status(500).json({
         status: 'error', 
