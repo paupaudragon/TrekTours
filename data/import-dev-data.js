@@ -1,9 +1,9 @@
-/*
-This is a Scripting module that automates data impoting and deletion
-1. Reads local files into variable and use the MongoDB data model Tour to create ducuments at once.
-2. Use MongoDB Api to delete documents 
-3. Leverage the argv[] to specify which function to call
-*/
+/**
+ * This is a Scripting module that automates data impoting and deletion
+ * 1. Reads local files into variable and use the MongoDB data model Tour to create ducuments at once.
+ * 2. Use MongoDB Api to delete documents 
+ * 3. Leverage the argv[] to specify which function to call
+ */
 const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose');

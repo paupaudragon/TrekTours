@@ -1,9 +1,9 @@
-/*
-This is the tour data model using mongoose.
-1. Data models based on the MongoDB documents.
-2. Virtural properties (duration(days)=>weeks)
-3. Mongoose middleware:
-    a. Dcument middleware: pre/post
+/** 
+ * This is the tour data model using mongoose.
+ * 1. Data models based on the MongoDB documents.
+ * 2. Virtural properties (duration(days)=>weeks)
+ * 3. Mongoose middleware:
+ *  a. Dcument middleware
 */
 const mongoose = require("mongoose");
 const slugify = require("slugify"); //turn "Test tour" to "Test-tour"

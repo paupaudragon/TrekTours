@@ -1,7 +1,8 @@
-/*
-This is a class of tour url routes using express Router.
-With Aliasing routes set up before the regular routes.
+/**
+ * This is a class of tour url routes using express Router.
+ * With Aliasing routes set up before the regular routes.
 */
+
 const express = require('express');
 const tourController = require('./../controllers/tourController');
 const router = express.Router();

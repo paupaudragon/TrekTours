@@ -1,10 +1,9 @@
-/*
-This is the server module using mongoose, dotenv.
-1. Connects to MongoDB cloud
-2. Using config file to store environment variables, such as database link and password
-3. Start the server
-*/
-
+/**
+ * This is the server module using mongoose, dotenv.
+ * 1. Connects to MongoDB cloud
+ * 2. Using config file to store environment variables, such as database link and password
+ * 3. Start the server
+ */
 const mongoose = require('mongoose');
 const dotenv = require('dotenv')
 dotenv.config({path: './config.env'})
