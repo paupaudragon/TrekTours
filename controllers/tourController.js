@@ -2,6 +2,8 @@ const Tour = require("./../models/tourModel");
 
 exports.getAllTours = async (req, res) => {
   try {
+    //console.log(req.query); //{ duration: { gte: '5' }, difficulty: 'easy' }
+
     //Build the query
 
     // 1)Filtering
@@ -21,16 +23,26 @@ exports.getAllTours = async (req, res) => {
     let query = Tour.find(JSON.parse(queryStr)); // to read all record, not passing any param in find()
 
     // 3) Sorting 
-
     if(req.query.sort){
-      query = query.sort(req.query.sort)
+      const sortBy = req.query.sort.split(',').join(' ')
+      //console.log(sortBy)
+      query = query.sort(sortBy)
+    }
+    //default sorting
+    else{
+      query = query.sort('-ratingsQuantity')
     }
 
-
+    // 4) Field limiting
+    if(req.query.fields){
+      const fields = req.query.fields.split(',').join(' ')
+      query = query.select(fields)
+    }else{
+      query = query.select('-__v')//- means excluding
+    }
 
     //Execute the query
     const tours = await query;
-    console.log(req.query); //{ duration: { gte: '5' }, difficulty: 'easy' }
 
     // Send the data
     res.status(200).json({
