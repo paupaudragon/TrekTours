@@ -1,6 +1,6 @@
 /** 
  * This is the tour data model using mongoose.
- * 1. Data models based on the MongoDB documents.
+ * 1. Data models based on the MongoDB documents(built-in and customized validator).
  * 2. Virtural properties (duration(days)=>weeks)
  * 3. Mongoose middleware:
  *  a. Dcument middleware
@@ -9,6 +9,7 @@
 */
 const mongoose = require("mongoose");
 const slugify = require("slugify"); //turn "Test tour" to "Test-tour"
+const validator = require("validator"); // third party library: line 23
 
 //Create a schema
 const tourSchema = new mongoose.Schema({
@@ -17,6 +18,9 @@ const tourSchema = new mongoose.Schema({
     required: [true, "Tour must have a name"],
     unique: true,
     trim: true,
+    maxlength: [40, 'A tour name must be at most 40 characters'],
+    minlength: [10, 'A tour name must be at least 10 characters'],
+    //validate: validator.isAlpha //space will be invalidat too
   },
   slug:{
 
@@ -34,10 +38,17 @@ const tourSchema = new mongoose.Schema({
   difficulty: {
     type: String,
     required: [true, "Tour must have a difficulty"],
+    enum:{
+      values: ['easy', 'medium','difficult'],
+      message: 'Difficulty can only be easy, medium or difficult'
+    
+    }
   },
   ratingsAverage: {
     type: Number,
     default: 4.5,
+    min:[1, 'Rating must be above 0'],
+    max:[5, 'Rating must be below 5.0']
   },
   ratingsQuantity: {
     type: Number,
@@ -51,7 +62,20 @@ const tourSchema = new mongoose.Schema({
     type: Number,
     required: [true, "Tour must have a price"],
   },
-  priceDiscount: Number,
+  priceDiscount:{ 
+    type: Number, 
+
+    //customized data validator: need to return a boolean 
+    validate:{
+      validator: function(val){
+        //this points to the current document only when create new doc not when update
+        return val < this.price // discount price need to be smaller than price
+      },
+      message: 'Discount price ({VALUE}) must be below price'
+
+
+    } 
+  },
   summary: {
     type: String,
     trim: true,
