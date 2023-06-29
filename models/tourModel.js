@@ -1,6 +1,6 @@
 /** 
  * This is the tour data model using mongoose.
- * 1. Data models based on the MongoDB documents(built-in and customized validator).
+ * 1. Data models based on the MongoDB documents(built-in, customized validator, third-party).
  * 2. Virtural properties (duration(days)=>weeks)
  * 3. Mongoose middleware:
  *  a. Dcument middleware
