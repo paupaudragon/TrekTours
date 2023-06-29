@@ -1,0 +1,17 @@
+**Operational Errors**
+- Problems that can be predicted
+1. invalid path
+2. invalid user input 
+3. failed to connect to server 
+4. fail to connect to database
+5. request timeout 
+
+**Programming Errors**
+- Bugs
+1. Reading properties on undefined
+2. passing a number where an object is expected
+3. using await without async
+4. using req.query instead of req.body...
+
+Errors => Error Handling Middleware => Response
+
