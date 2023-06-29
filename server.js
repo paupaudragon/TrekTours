@@ -8,6 +8,13 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv')
 dotenv.config({path: './config.env'})
 
+process.on("uncaughtException", (err) => {
+  console.log("Unhandled rejection! Shut down");
+  console.log(err.name, err.message);
+
+  process.exit(1);
+});
+
 const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.PASSWORD)
 
 //change DB to DATABASE_LOCAL if want to use local database
@@ -26,6 +33,17 @@ console.log(app.get('env'))
 
 //start the server
 const port = process.env.port;
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log("listening on 3000");
 });
+
+// unhandled promise rejection for db connection fail
+// db password incorrect, etc.
+process.on("unhandledRejection", (err) => {
+  console.log("Unhandled rejection! Shut down");
+  console.log(err);
+  server.close(() => {
+    process.exit(1);
+  });
+});
+
