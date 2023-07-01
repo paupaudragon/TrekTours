@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const validator = require('validator')// third-party
+const bcrypt = require('bcryptjs')
 
 //fields: name, email, photo, passwords, passwordsCOnfirm
 const userSchema = new mongoose.Schema({
@@ -29,8 +30,30 @@ const userSchema = new mongoose.Schema({
     passwordConfirm:{
         type: String, 
         required: [true, 'User must confirm password'], 
+        validate: {
+            // This only workd on create(), save()
+            // If it was an update, this will not run 
+            validator: function(currentElement) {
+                return currentElement === this.password;
+            }, 
+            message: 'Passwrods are not the same'
+        }
     }
 })
+
+// Mongoose DOcument middleware
+userSchema.pre('save', async function(next){
+    // If password not modified, return 
+    if(!this.isModified('password')) return  next()
+
+    this.password = await bcrypt.hash(this.password, 12) // the numbber means how intensive the cpu process will be, higher the better but slower
+    this.passwordConfirm = undefined; //after checking it is correct, throw away before saving into the database
+
+})
+
+
+
+
 
 const User = mongoose.model('User', userSchema)
 module.exports = User

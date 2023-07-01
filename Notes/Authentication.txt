@@ -1,0 +1,8 @@
+Json Web Token(JWT)
+Client: Post /login {email, password} => Server : if user && passwrod => create unique JWT, not saved in server
+Client: Store JWT in cookie or localStore
+
+
+Header+ payload + secret => signature
+
+signature + Hearder + payload => JWT
