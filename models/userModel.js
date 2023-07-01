@@ -39,6 +39,7 @@ const userSchema = new mongoose.Schema({
       message: "Passwrods are not the same",
     },
   },
+  passwordChangedAt:{ type: Date} //only exists when password is changed
 });
 
 // Mongoose DOcument middleware
@@ -58,5 +59,15 @@ userSchema.methods.correctPassword = async function (
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
+// Check is the password is changed after the token is issued
+userSchema.methods.changePasswordAfter = function(JWTTimestamp){
+    if(this.passwordChangedAt){
+        const changedTimeStamp = parseInt(this.passwordChangedAt.getTime()/1000,10)
+        //console.log(changedTimeStamp, JWTTimestamp)
+        return JWTTimestamp < changedTimeStamp 
+
+    }
+    return false
+}
 const User = mongoose.model("User", userSchema);
 module.exports = User;

@@ -1,7 +1,9 @@
+const {promisify} = require('util');
 const jwt = require("jsonwebtoken");
 const User = require("./../models/userModel");
 const catchAsync = require("./../utils/catchAsync"); // all async need to do this for error handling
 const AppError = require('./../utils/appError')
+
 
 const signToken = id=>{
     return jwt.sign({ id: id }, process.env.JWT_SECRET, {
@@ -17,6 +19,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
     email: req.body.email,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
+    passwordChangedAt: req.body.passwordChangedAt
   });
 
   //JWT 
@@ -45,7 +48,7 @@ exports.login = catchAsync (async (req, res, next)=>{
     if(!user || ! (await user.correctPassword(password, user.password))){
         return next(new AppError('Incorrect email or password', 401))
     }
-    console.log(user)
+    //console.log(user)
 
     // send the token
     const token = signToken(user._id)
@@ -53,4 +56,33 @@ exports.login = catchAsync (async (req, res, next)=>{
         status: 'success', 
         token
     })
+})
+
+exports.protect = catchAsync(async (req, res, next)=>{
+
+    // 1. Get the token and check if it exists
+    let token
+    if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
+        token = req.headers.authorization.split(' ')[1];
+
+    }
+
+    // 2. Validate the token 
+    if(!token) {
+        return next(new AppError('You are not logged in ', 401))
+    }
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
+
+    // 3. Check if user still exist
+    const freshUser = await User.findById(decoded.id)
+    if(!freshUser) return next(new AppError('The user belonging to the token does not exist', 401))
+
+    // 4. check if user change password after the token is issued
+    if(freshUser.changePasswordAfter(decoded.iat)){
+      return next(new AppError('User recently changed the passowrd',401))
+    }
+
+    // Grant access to the pretected 
+    req.user = freshUser
+    next()
 })

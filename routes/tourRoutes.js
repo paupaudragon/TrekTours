@@ -6,6 +6,7 @@
 const express = require('express');
 const tourController = require('./../controllers/tourController');
 const router = express.Router();
+const authController = require('./../controllers/authController')
 
 /*
 Order of routes:
@@ -20,7 +21,7 @@ router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan)
 
 
 //route
-router.route('/').get(tourController.getAllTours).post(tourController.createATour)//checkbody only apply to post
+router.route('/').get(authController.protect, tourController.getAllTours).post(tourController.createATour)//checkbody only apply to post
 router.route('/:id').get(tourController.getATour).patch(tourController.updateATour).delete(tourController.deleteATour)
 
 

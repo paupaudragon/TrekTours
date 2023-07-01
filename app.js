@@ -16,6 +16,7 @@ const userRouter = require("./routes/userRoutes");
 
 //logging
 const morgan = require("morgan");
+const { request } = require("http");
 
 // Scripts
 if (process.env.NODE_ENV === "development") {
@@ -26,8 +27,14 @@ if (process.env.NODE_ENV === "development") {
 app.use(express.json()); // parsing incoming json data, or undefined
 app.use(express.static(`${__dirname}/public`)); //using public folder for accessing the front-end
 
+app.use((req, res, next) => {
+  request.requestTime = new Date().toISOString();
+  console.log(req.headers);
+  next()
+})
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/users", userRouter);
+
 
 //all means all verbs api(get, post, ...)
 //* all urls
