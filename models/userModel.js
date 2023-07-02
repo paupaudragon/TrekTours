@@ -7,9 +7,6 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "User must have a name"],
-    // trim: true,
-    // maxLength: [50, 'User name must be shorter than 50 characters'],
-    // minlength: [1, 'User name must be larger than 0 character']
   },
   email: {
     type: String,
@@ -20,6 +17,11 @@ const userSchema = new mongoose.Schema({
   },
   photo: {
     type: String,
+  },
+  role:{
+    type: String,
+    enum: ["admin", "user", "guide", "lead-guide"],
+    default: 'user'
   },
   password: {
     type: String,

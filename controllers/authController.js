@@ -19,7 +19,8 @@ exports.signUp = catchAsync(async (req, res, next) => {
     email: req.body.email,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
-    passwordChangedAt: req.body.passwordChangedAt
+    passwordChangedAt: req.body.passwordChangedAt, 
+    role: req.body.role
   });
 
   //JWT 
@@ -86,3 +87,15 @@ exports.protect = catchAsync(async (req, res, next)=>{
     req.user = freshUser
     next()
 })
+
+exports.restrictTo = (...roles)=>{ //(...variable) ES6 syntax: pass multiple args to save into variable as an array of objects
+  return (req, res, next)=>{
+    // roles is an array [admin, lead-guide].
+
+    //req.user is defined in last function protect
+    if(!roles.includes(req.user.role)){
+      return next(new AppError('You do not have the permission to perform this action', 403))
+    }
+    next()
+  }
+}
