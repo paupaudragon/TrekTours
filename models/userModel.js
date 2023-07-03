@@ -1,3 +1,4 @@
+const crypto = require('crypto'); // node built-in
 const mongoose = require("mongoose");
 const validator = require("validator"); // third-party
 const bcrypt = require("bcryptjs");
@@ -41,9 +42,13 @@ const userSchema = new mongoose.Schema({
       message: "Passwrods are not the same",
     },
   },
-  passwordChangedAt:{ type: Date} //only exists when password is changed
+  passwordChangedAt:{ type: Date}, //only exists when password is changed
+  passwordResetToken: String, 
+  passwordResetExpires: Date
 });
 
+
+//=====================================================================
 // Mongoose DOcument middleware
 userSchema.pre("save", async function (next) {
   // If password not modified, return
@@ -52,6 +57,16 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 12); // the numbber means how intensive the cpu process will be, higher the better but slower
   this.passwordConfirm = undefined; //after checking it is correct, throw away before saving into the database
 });
+
+userSchema.pre('save', function(next){
+  if(!this.isModified('password') || this.isNew) return next();
+  
+  this.passwordChangedAt = new Date.now() - 1000 //offset 1 sec 
+  next()
+
+})
+
+//======================================================================
 
 // Check the if the pasword is correct
 userSchema.methods.correctPassword = async function (
@@ -71,5 +86,21 @@ userSchema.methods.changePasswordAfter = function(JWTTimestamp){
     }
     return false
 }
+
+userSchema.methods.createPasswordResetToken = function(){
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  this.passwordResetToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+  console.log({resetToken}, this.passwordResetToken);
+  this.passwordResetExpires = Date.now() + 10 *60 * 1000
+
+  return resetToken;
+}
+
+
+
+
 const User = mongoose.model("User", userSchema);
 module.exports = User;
