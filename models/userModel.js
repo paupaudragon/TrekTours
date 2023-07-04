@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const validator = require("validator"); // third-party
 const bcrypt = require("bcryptjs");
 
-//fields: name, email, photo, passwords, passwordsCOnfirm
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -44,12 +43,22 @@ const userSchema = new mongoose.Schema({
   },
   passwordChangedAt:{ type: Date}, //only exists when password is changed
   passwordResetToken: String, 
-  passwordResetExpires: Date
+  passwordResetExpires: Date, 
+  active:{
+    type: Boolean, 
+    default: true, 
+    select: false
+  }
 });
 
 
 //=====================================================================
-// Mongoose DOcument middleware
+// Mongoose Document middleware
+
+/**
+ * Saves the hashed password to database.
+ * @method: Any funtions that have save() or create()
+ */
 userSchema.pre("save", async function (next) {
   // If password not modified, return
   if (!this.isModified("password")) return next();
@@ -58,6 +67,10 @@ userSchema.pre("save", async function (next) {
   this.passwordConfirm = undefined; //after checking it is correct, throw away before saving into the database
 });
 
+/**
+ * Saves the password changed time into database, if there is any.
+ * @method: Any funtions that have save() or create()
+ */
 userSchema.pre('save', function(next){
   if(!this.isModified('password') || this.isNew) return next();
   
@@ -66,9 +79,25 @@ userSchema.pre('save', function(next){
 
 })
 
+// Mongoose Query Middleware
+
+/**
+ * Selects all documents, whose active filed is not false.
+ * @method: Any query started with "find"
+ */
+userSchema.pre(/^find/, function(next){
+  this.find({active:{$ne:false}})
+  next()
+})
+
 //======================================================================
 
-// Check the if the pasword is correct
+/**
+ * Checks if the password is correct when logging in.
+ * @param {String} candidatePassword 
+ * @param {String} userPassword 
+ * @returns true if the password is correct; otherwise, false.
+ */
 userSchema.methods.correctPassword = async function (
   candidatePassword,
   userPassword
@@ -76,7 +105,11 @@ userSchema.methods.correctPassword = async function (
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
-// Check is the password is changed after the token is issued
+/**
+ * Checks if the token is generated after the passwrod is changed.
+ * @param {Date} JWTTimestamp 
+ * @returns true if the token is generated BEFORE the passwrod; otherwise false.
+ */
 userSchema.methods.changePasswordAfter = function(JWTTimestamp){
     if(this.passwordChangedAt){
         const changedTimeStamp = parseInt(this.passwordChangedAt.getTime()/1000,10)
@@ -87,13 +120,17 @@ userSchema.methods.changePasswordAfter = function(JWTTimestamp){
     return false
 }
 
+/**
+ * Creates the password reset token, and change the password reset expiration date to 10 minutes from now.
+ * @returns the reset token.
+ */
 userSchema.methods.createPasswordResetToken = function(){
   const resetToken = crypto.randomBytes(32).toString('hex');
   this.passwordResetToken = crypto
     .createHash("sha256")
     .update(resetToken)
     .digest("hex");
-  console.log({resetToken}, this.passwordResetToken);
+  //console.log({resetToken}, this.passwordResetToken);
   this.passwordResetExpires = Date.now() + 10 *60 * 1000
 
   return resetToken;
