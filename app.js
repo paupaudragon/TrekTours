@@ -14,6 +14,7 @@ const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require('xss-clean')
+const hpp = require('hpp')
 
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
@@ -47,6 +48,7 @@ app.use("/api", limiter);
 
 
 //Express middleware
+
 /**
  * Body parser: Parses data from body into req.body, size < 10kb
  */
@@ -62,6 +64,23 @@ app.use(mongoSanitize()); //removes $
  */
 app.use(xss())
 
+/**
+ * Prevents parameter pollution:
+ * 1. ?sort=duration&sort=price, will be trimmed to the last sort
+ * 2. It also damages when duration=5 & duration =9, need to use whitelist
+ */
+app.use(
+  hpp({
+    whitelist: [
+      "duration",
+      "ratingsAverage",
+      "ratingsQuantity",
+      "maxGroupSize",
+      "difficulty",
+      "price",
+    ],
+  })
+); 
 /**
  * Serves static files
  */
