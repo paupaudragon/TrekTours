@@ -1,0 +1,36 @@
+Compromised databases: 
+1. Strongly encrypted passwords with salt and hash(bcrypt)
+2. Strongly encrypted passwords reset tokens(sha256)
+
+Brute force attacks
+1. Use bcrypt(to make login requests slow)
+2. Implement rate limiting(express-rate-limit)
+3. Implement max login attempts
+
+Cross-site scripting(XSS) attacks
+1. store JWT in HTTPOnly cookies
+2. Sanitize user input data
+3. Set special HTTP headers(helmet package)
+
+Denial of service(DOS) attack 
+1. implement rate limiting 
+2. limit body payload 
+3. avoid evil regular expressions
+
+NoSQL query injection 
+1. Use mongoose for MongoDB
+2. Sanitize user input data
+
+Best practices and suggestions: 
+1. Always HTTPS
+2. create random password reset tokens with expiration data
+3. Deny access to JWT after password change 
+4. Don't commit sensitive congif data to git 
+5. Don't send error details to clients 
+6. Prevent corss-site request forgery(csurf package)
+7. Require re-auth before high-value action 
+8. implement black-list of untrusted JWT
+9. Confirm user email after first creating account 
+10. keep user logged in with refresh toekn 
+11 implement two-factor authentication
+12. prevent parameter pollution causing Uncaght exceptions
