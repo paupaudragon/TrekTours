@@ -10,6 +10,7 @@
 const mongoose = require("mongoose");
 const slugify = require("slugify"); //turn "Test tour" to "Test-tour"
 const validator = require("validator"); // third party library: line 23
+const User = require("./userModel")
 
 //Create a schema
 const tourSchema = new mongoose.Schema({
@@ -123,7 +124,16 @@ const tourSchema = new mongoose.Schema({
       description: String, 
       day: Number
     }
-  ]
+  ], 
+  //guides:Array,// embed tour guide in tour
+  guides: [
+    {
+      type: mongoose.Schema.ObjectId, 
+      ref:'User' //no need to import 
+    }
+  ], 
+
+
 }, 
 {
   toJSON:{virtuals: true}, //schema options
@@ -142,6 +152,15 @@ tourSchema.pre('save', function(next){
   this.slug = slugify(this.name, {lower: true}) // this means the current document that's being saved
   next()
 })
+
+/**
+ * Embeds tour guids info into a tour when creating a new tour.
+ */
+// tourSchema.pre('save', async function(next){
+//   const guidesPromises = this.guides.map(async id=>await User.findById(id))
+//   this.guides = await Promise.all(guidesPromises)
+//   next()
+// })
 
 // tourSchema.pre('save', function(next){
 //   console.log('Will save the doc')
@@ -166,6 +185,15 @@ tourSchema.pre(/^find/, function(next){ //regular expression: anything started w
 tourSchema.post(/^find/, function(docs, next){
   console.log(`Query took ${Date.now()-this.start} milliseconds`)
   //console.log(docs)
+  next()
+})
+
+tourSchema.pre(/^find/, function(next){
+  this.populate({
+    path: 'guides', 
+    select:'-__v'
+  });
+
   next()
 })
 
