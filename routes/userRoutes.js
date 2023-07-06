@@ -15,4 +15,5 @@ router.delete('/deleteMe', authController.protect, userController.deleteMe)
 router.route('/').get(userController.getAllUsers).post(userController.createAUser)
 router.route('/:id').get(userController.getAUser).patch(userController.updateUser).delete(userController.deleteUser)
 
+
 module.exports = router

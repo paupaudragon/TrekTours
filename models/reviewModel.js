@@ -16,7 +16,7 @@ const reviewSchema = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
-    author: {
+    user: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
     },
@@ -32,18 +32,18 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
-reviewSchema.pre(/^find/, function (next) {
-  this.find();
-  this.start = Date.now();
-  next();
-});
+// reviewSchema.pre(/^find/, function (next) {
+//   this.find();
+//   this.start = Date.now();
+//   next();
+// });
 
+/**
+ * Populates find reviews query to display corresponding user info.
+ */
 reviewSchema.pre(/^find/, function(next){
   this.populate({
-    path: 'tour', 
-    select: 'name'
-  }).populate({
-    path:'author', 
+    path:'user', 
     select:'name photo'
   })
   next()
@@ -51,3 +51,4 @@ reviewSchema.pre(/^find/, function(next){
   
 const Review = mongoose.model("Review", reviewSchema);
 module.exports = Review;
+

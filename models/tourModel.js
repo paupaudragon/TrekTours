@@ -133,7 +133,6 @@ const tourSchema = new mongoose.Schema({
     }
   ], 
 
-
 }, 
 {
   toJSON:{virtuals: true}, //schema options
@@ -145,6 +144,16 @@ tourSchema.virtual("durationWeeks").get(function () {
   //only function() can provide this key word
   return this.duration / 7; // how many weeks
 });
+
+/**
+ * Virtual populate children data(reviews) to its parent(tours).
+ */
+tourSchema.virtual('reviews', {
+  ref: 'Review', 
+  foreignField: 'tour',
+  localField: '_id' 
+
+})
 
 // Pre middleware
 // Document middleware: runs before .save() and .create()
@@ -204,9 +213,6 @@ tourSchema.pre('aggregate', function(next){
   console.log(this)
   next()
 })
-
-
-
 
 
 const Tour = mongoose.model("Tour", tourSchema);

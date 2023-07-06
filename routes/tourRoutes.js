@@ -5,8 +5,9 @@
 
 const express = require("express");
 const tourController = require("./../controllers/tourController");
-const router = express.Router();
 const authController = require("./../controllers/authController");
+const reviewRouter = require("./reviewRoutes");
+const router = express.Router();
 
 /*
 Order of routes:
@@ -32,8 +33,10 @@ router
   .patch(tourController.updateATour)
   .delete(
     authController.protect,
-    authController.restrictTo('admin', 'lead-guide'),
+    authController.restrictTo("admin", "lead-guide"),
     tourController.deleteATour
   );
+
+router.use('/:tourId/reviews', reviewRouter)
 
 module.exports = router;
