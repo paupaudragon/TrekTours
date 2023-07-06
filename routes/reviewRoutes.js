@@ -5,6 +5,7 @@ const authController = require('./../controllers/authController');
 const router = express.Router({
     mergeParams: true //for nested routes
 });
+router.route('/:id').delete(reviewController.deleteReview)
 
 router.route('/')
 .get(reviewController.getAllReviews)
