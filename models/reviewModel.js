@@ -32,5 +32,12 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
+reviewSchema.pre(/^find/, function (next) {
+  this.find();
+  this.start = Date.now();
+  next();
+});
+
+  
 const Review = mongoose.model("Review", reviewSchema);
 module.exports = Review;
