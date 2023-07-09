@@ -20,18 +20,6 @@ const filterObj = (obj, ...allowedfields) => {
   return newObject;
 };
 
-exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find();
-
-  // Send the data
-  res.status(200).json({
-    status: "success",
-    results: users.length,
-    data: {
-      users: users,
-    },
-  });
-});
 
 exports.deleteMe = catchAsync(async (req, res, next)=>{
   await User.findByIdAndUpdate(req.user.id, {active: false})
@@ -52,7 +40,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
       )
     );
   }
-
+  
   // 2) Update user document
   // We need to prevent user change their roles. We use filter instead of req.body
   const filteredBody = filterObj(req.body, "name", "email"); // only need name and email
@@ -63,7 +51,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data:{
-        user: updatedUser,
+      user: updatedUser,
     }
   });
 });
@@ -77,6 +65,8 @@ exports.createAUser = (req, res) => {
   });
 };
 
+
+exports.getAllUsers = factory.getAll(User);
 exports.getAUser = factory.getOne(User)
 exports.updateUser = factory.updateOne(User); //Do not attemp change password using this method
 exports.deleteUser = factory.deleteOne(User);
