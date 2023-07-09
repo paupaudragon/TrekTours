@@ -9,7 +9,6 @@ This is a controller for the tour resource.
 const Tour = require("./../models/tourModel");
 const APIFeatures = require("./../utils/apiFeatures");
 const catchAsync = require("./../utils/catchAsync");
-const AppError = require("./../utils/appError");
 const factory = require('./handlerFactory')
 
 exports.aliasTopTours = (req, res, next) => {
@@ -19,78 +18,10 @@ exports.aliasTopTours = (req, res, next) => {
   next();
 };
 
-exports.getAllTours = catchAsync(async (req, res, next) => {
-  //Execute the query
-  const features = new APIFeatures(Tour.find(), req.query)
-    .filter()
-    .sort()
-    .limitFields()
-    .paginate();
-
-  const tours = await features.query;
-
-  // Send the data
-  res.status(200).json({
-    status: "success",
-    results: tours.length,
-    data: {
-      tours: tours,
-    },
-  });
-});
-
-/**
- * Gets a tour by id and show full guides info(name, email,..)
- */
-exports.getATour = catchAsync(async (req, res, next) => {
-   // Tour.findOne({_id: req.params.id})
-  const tour = await Tour.findById(req.params.id).populate('reviews');
-
-  if(!tour){
-    return next(new AppError('No tour found with that id', 404))
-  }
-
-  res.status(200).json({
-    status: "success",
-    data: {
-      tours: tour,
-    },
-  });
-});
-
-/**
- * Calls catchAsync(), passing an async function into it.
- * The async function will return promise. If rejected, catchAsync() will catch the error; if not next().
- */
-exports.createATour = catchAsync(async (req, res, next) => {
-  const newTour = await Tour.create(req.body); //MongoDb API: will ignore the data not modeled in the tourModel
-  res.status(201).json({
-    status: "success",
-    data: {
-      tour: newTour,
-    },
-  });
-});
-
-exports.updateATour = catchAsync(async (req, res, next) => {
-  //mongoose API
-  const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-    new: true, //return the new record
-    runValidators: true,
-  });
-
-  if(!tour){
-    return next(new AppError('No tour found with that id', 404))
-  }
-
-  res.status(200).json({
-    status: "success",
-    data: {
-      tour,
-    },
-  });
-});
-
+exports.getAllTours = factory.getAll(Tour);
+exports.getATour = factory.getOne(Tour, {path:'reviews'})
+exports.createATour = factory.createOne(Tour)
+exports.updateATour = factory.updateOne(Tour);
 exports.deleteATour = factory.deleteOne(Tour);
 
 exports.getTourStats = catchAsync(async (req, res, next) => {

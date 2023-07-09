@@ -69,25 +69,14 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 });
 
 
-exports.getAUser = (req, res) => {
-  res.status(500).json({
-    status: "error",
-    message: "TODO",
-  });
-};
 
 exports.createAUser = (req, res) => {
   res.status(500).json({
     status: "error",
-    message: "TODO",
+    message: "This route is not defined and please use sign up instead",
   });
 };
 
-exports.updateUser = (req, res) => {
-  res.status(500).json({
-    status: "error",
-    message: "TODO",
-  });
-};
-
+exports.getAUser = factory.getOne(User)
+exports.updateUser = factory.updateOne(User); //Do not attemp change password using this method
 exports.deleteUser = factory.deleteOne(User);
