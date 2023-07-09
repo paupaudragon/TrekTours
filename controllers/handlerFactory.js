@@ -64,7 +64,12 @@ exports.getOne = (Model, populateOpt) =>
 exports.getAll = (Model, populateOpt) =>
 catchAsync(async (req, res, next) => {
 
-    const features = new APIFeatures(Model.find(), req.query)
+
+  // added after nested routes for get reviews on tour
+  let filter;
+  if (req.params.tourId) filter = { tour: req.params.tourId };
+
+  const features = new APIFeatures(Model.find(filter), req.query)
     .filter()
     .sort()
     .limitFields()
