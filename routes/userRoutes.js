@@ -13,6 +13,13 @@ router.patch(
   authController.protect,
   authController.updatePassword
 );
+
+router.get(
+  "/me",
+  authController.protect,
+  userController.getMe,
+  userController.getAUser
+);
 router.patch("/updateMe", authController.protect, userController.updateMe);
 router.delete("/deleteMe", authController.protect, userController.deleteMe);
 
@@ -20,7 +27,7 @@ router
   .route("/")
   .get(userController.getAllUsers)
   .post(userController.createAUser);
-  
+
 router
   .route("/:id")
   .get(userController.getAUser)
