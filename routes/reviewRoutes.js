@@ -9,12 +9,6 @@ const router = express.Router({
 router.use(authController.protect);
 
 router
-  .route("/:id")
-  .get(reviewController.getReview)
-  .delete(authController.restrictTo("user"),reviewController.deleteReview)
-  .patch(authController.restrictTo("user"),reviewController.updateReview);
-
-router
   .route("/")
   .get(reviewController.getAllReviews)
   .post(
@@ -22,5 +16,12 @@ router
     reviewController.setTourUserIds,
     reviewController.createReview
   );
+
+router
+  .route("/:id")
+  .get(reviewController.getReview)
+  .delete(authController.restrictTo("user", "admin"),reviewController.deleteReview)
+  .patch(authController.restrictTo("user", "admin"),reviewController.updateReview);
+
 
 module.exports = router;
