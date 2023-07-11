@@ -63,7 +63,7 @@ userSchema.pre("save", async function (next) {
   // If password not modified, return
   if (!this.isModified("password")) return next();
 
-  this.password = await bcrypt.hash(this.password, 12); // the numbber means how intensive the cpu process will be, higher the better but slower
+  this.password =  bcrypt.hash(this.password, 12); // the numbber means how intensive the cpu process will be, higher the better but slower
   this.passwordConfirm = undefined; //after checking it is correct, throw away before saving into the database
 });
 

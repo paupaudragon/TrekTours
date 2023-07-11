@@ -75,7 +75,7 @@ catchAsync(async (req, res, next) => {
     .limitFields()
     .paginate();
 
-  const doc = await features.query;
+  const doc = await features.query; //can add <.explain()> after query to see performance stats
 
   // Send the data
   res.status(200).json({
