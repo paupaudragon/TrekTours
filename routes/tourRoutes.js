@@ -25,7 +25,13 @@ router.route("/monthly-plan/:year").get(
   authController.restrictTo("admin", "guide","lead-guide"),
   tourController.getMonthlyPlan);
 
-//route
+
+router.route('/tours-within/:distance/center/:latlng/unit/:unit').get( tourController.getTourWithin)
+//tours-within?distance=233,center=-40,45&unit=mi
+//tours-within/233/center/-40,45/unit/mi
+
+router.route('/distances/:latlng/unit/:unit').get(tourController.getDistances)
+//general route
 router
   .route("/")
   .get( tourController.getAllTours)
