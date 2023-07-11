@@ -6,17 +6,18 @@ const router = express.Router({
   mergeParams: true, //for nested routes
 });
 
+router.use(authController.protect);
+
 router
   .route("/:id")
   .get(reviewController.getReview)
-  .delete(reviewController.deleteReview)
-  .patch(reviewController.updateReview);
+  .delete(authController.restrictTo("user"),reviewController.deleteReview)
+  .patch(authController.restrictTo("user"),reviewController.updateReview);
 
 router
   .route("/")
   .get(reviewController.getAllReviews)
   .post(
-    authController.protect,
     authController.restrictTo("user"),
     reviewController.setTourUserIds,
     reviewController.createReview

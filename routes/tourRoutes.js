@@ -20,17 +20,26 @@ router
   .route("/top-5-cheap")
   .get(tourController.aliasTopTours, tourController.getAllTours);
 router.route("/tour-stats").get(tourController.getTourStats);
-router.route("/monthly-plan/:year").get(tourController.getMonthlyPlan);
+router.route("/monthly-plan/:year").get(
+  authController.protect,
+  authController.restrictTo("admin", "guide","lead-guide"),
+  tourController.getMonthlyPlan);
 
 //route
 router
   .route("/")
-  .get(authController.protect, tourController.getAllTours)
-  .post(tourController.createATour); //checkbody only apply to post
+  .get( tourController.getAllTours)
+  .post(
+    authController.protect,
+    authController.restrictTo('admin', 'lead-guide'),
+    tourController.createATour); //checkbody only apply to post
 router
   .route("/:id")
   .get(tourController.getATour)
-  .patch(tourController.updateATour)
+  .patch(
+    authController.protect,
+    authController.restrictTo("admin", "lead-guide"),
+    tourController.updateATour)
   .delete(
     authController.protect,
     authController.restrictTo("admin", "lead-guide"),
