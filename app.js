@@ -6,6 +6,7 @@
  * 4. Express reading static files(html, css, etc.)
  * 5. Defines the root routes for each resource
  */
+const path = require('path');
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
@@ -22,6 +23,15 @@ const globalErrorHandler = require("./controllers/errorController");
 const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
 const reviewRouter = require("./routes/reviewRoutes");
+
+//Template Engine
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+
+/**
+ * Serves static files
+ */
+app.use(express.static(path.join(__dirname, 'public'))); //using public folder for accessing the front-end
 
 // Global middleware
 
@@ -46,7 +56,6 @@ const limiter = rateLimit({
   message: "Too many requests from this IP, please try in an hour.",
 });
 app.use("/api", limiter);
-
 
 //Express middleware
 
@@ -82,10 +91,6 @@ app.use(
     ],
   })
 ); 
-/**
- * Serves static files
- */
-app.use(express.static(`${__dirname}/public`)); //using public folder for accessing the front-end
 
 /**
  * Test middleware
@@ -95,6 +100,16 @@ app.use((req, res, next) => {
   console.log(req.headers);
   next();
 });
+
+// Routes 
+//pug
+app.get('/', (req, res)=>{
+  res.status(200).render('base', 
+  {
+    tour: "The forest Hiker", 
+    user: 'Jonas'
+  });
+})
 
 
 app.use("/api/v1/tours", tourRouter);
