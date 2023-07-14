@@ -16,6 +16,7 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require('xss-clean')
 const hpp = require('hpp')
+const cookieParser = require('cookie-parser')
 
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
@@ -39,7 +40,9 @@ app.use(express.static(path.join(__dirname, 'public'))); //using public folder f
 /**
  * Sets Security HTTP headers
  */
+// app.use(helmet({contentSecurityPolicy: false}));
 app.use(helmet());
+
 
 /**
  * Sets logging info output in development environment
@@ -64,6 +67,7 @@ app.use("/api", limiter);
  * Body parser: Parses data from body into req.body, size < 10kb
  */
 app.use(express.json({limit: '10kb'}));
+app.use(cookieParser());
 
 /**
  * Data sanitization again noSQL query injection
@@ -98,7 +102,7 @@ app.use(
  */
 app.use((req, res, next) => {
   request.requestTime = new Date().toISOString();
-  console.log(req.headers);
+  console.log(req.cookies);
   next();
 });
 
