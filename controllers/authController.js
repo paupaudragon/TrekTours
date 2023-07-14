@@ -39,9 +39,9 @@ const createSendToken = (user, statusCode, res) => {
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
-  }
+  };
   // Only in prodcution, use https
-  if(process.env.NODE_ENV ==='production') cookieOptions.secure = true
+  if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
   res.cookie("jwt", token, cookieOptions);
   user.password = undefined; //remove password from the output
 
@@ -80,8 +80,8 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
-  }else if(req.cookies.jwt){
-    token = req.cookies.jwt
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
 
   // 2. Validate the token
@@ -208,4 +208,28 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   //4) log the user in
   createSendToken(user, 200, res);
+});
+
+// Only for the view
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  if (req.cookies.jwt) {
+    //verify the token
+    const decoded = await promisify(jwt.verify)(
+      req.cookies.jwt,
+      process.env.JWT_SECRET
+    );
+
+    const currentUser = await User.findById(decoded.id);
+    if (!currentUser) return next();
+
+    // check if user change password after the token is issued
+    if (currentUser.changePasswordAfter(decoded.iat)) {
+      return next();
+    }
+
+    // Grant access to the pretected
+    res.locals.user = currentUser;
+    return next();
+  }
+  next()
 });
