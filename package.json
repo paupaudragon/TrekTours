@@ -1,12 +1,15 @@
 {
   "name": "natours",
   "version": "1.0.0",
+  "source": "/public/js/index.js",
   "description": "Make a hiking tour website",
   "main": "app.js",
   "scripts": {
     "start:dev": "nodemon server.js",
     "start:prod": "set NODE_ENV=production&& nodemon server.js",
-    "debug": "ndb server.js"
+    "debug": "ndb server.js",
+    "watch:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js",
+    "build:js": "parcel build ./public/js/index.js --out-dir ./public/js --out-file bundle.js"
   },
   "author": "Tingting Zhou",
   "license": "ISC",
