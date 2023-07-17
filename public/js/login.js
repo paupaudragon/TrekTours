@@ -4,7 +4,7 @@
 
 // export 
 const login = async (email, password) => {
-    console.log(email,password);
+    //console.log(email,password);
     //axios have good error throwing message, so use try catch 
   try {
     const res = await axios({
@@ -16,17 +16,18 @@ const login = async (email, password) => {
       },
     });
 
-    console.log(res);
+    //console.log(res);
 
-    // if(res.data.status ==='success'){
+    if(res.data.status ==='success'){
     //   showAlert('success','Logged in');
-    //   window.setTimeout(()=>{
-    //     location.assign('/');
-    //   }, 1500)
-    // }
+        alert('successully log in');
+      window.setTimeout(()=>{
+        location.assign('/');
+      }, 1500)
+    }
   } catch (err) {
     // showAlert('error',err.response.data.message);
-    console.log(err.response.data);
+    alert(err.response.data.message);
   }
 };
 
