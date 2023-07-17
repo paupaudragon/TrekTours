@@ -1,28 +1,29 @@
+const locations = JSON.parse(document.getElementById("map").dataset.locations);
+console.log(locations);
 
-export const displayMap = (locations)=>{
+// export const displayMap = (locations)=>{
 
 mapboxgl.accessToken =
-  'pk.eyJ1IjoicGF1cGF1ZHJhZ29uIiwiYSI6ImNsazMwcDMwbjAydmkza3F3NGVyY2UwamEifQ.HJatPBeSZDETGc-NkQJQKg';
+  "pk.eyJ1IjoicGF1cGF1ZHJhZ29uIiwiYSI6ImNsazMwcDMwbjAydmkza3F3NGVyY2UwamEifQ.HJatPBeSZDETGc-NkQJQKg";
 var map = new mapboxgl.Map({
   container: "map",
   style: "mapbox://styles/paupaudragon/clk311rjj000601rm908k6fan",
-  scrollZoom:false
-
+  scrollZoom: false,
 });
 
-const bounds = new mapboxgl.LngLatBounds()
+const bounds = new mapboxgl.LngLatBounds();
 
-locations.forEach(loc =>{
-    // Add marker 
-    const el = document.createElement('div');
-    el.className = 'marker';
+locations.forEach(loc => {
+  // Add marker
+  const el = document.createElement("div");
+  el.className = "marker";
 
-    new mapboxgl.Marker({
-      element: el,
-      anchor: "bottom", // the bottom of the pin is at the location
-    })
-      .setLngLat(loc.coordinates)
-      .addTo(map);
+  new mapboxgl.Marker({
+    element: el,
+    anchor: "bottom", // the bottom of the pin is at the location
+  })
+    .setLngLat(loc.coordinates)
+    .addTo(map);
 
     // Add popup
     new mapboxgl.Popup({
@@ -32,17 +33,15 @@ locations.forEach(loc =>{
       .setHTML(`<p>Day ${loc.day}: ${loc.description}</p>`)
       .addTo(map);
 
-    //extends the map bounds to include the current location
-    bounds.extend(loc.coordinates);
-})
+  bounds.extend(loc.coordinates);
+});
 
 map.fitBounds(bounds, {
-    padding: {
-      top: 150,
-      bottom: 150,
-      left: 100,
-      right: 100,
-    },
-  });
+  padding: {
+    top: 150,
+    bottom: 150,
+    left: 100,
+    right: 100,
+  },
+});
 
-}
