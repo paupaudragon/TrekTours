@@ -80,7 +80,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
-    //For client login 
+    //For client login
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
   }
@@ -214,7 +214,6 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 // Only for the view
 exports.isLoggedIn = catchAsync(async (req, res, next) => {
   if (req.cookies.jwt) {
-    //verify the token
     const decoded = await promisify(jwt.verify)(
       req.cookies.jwt,
       process.env.JWT_SECRET
@@ -232,5 +231,5 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
     res.locals.user = currentUser;
     return next();
   }
-  next()
+  next();
 });
