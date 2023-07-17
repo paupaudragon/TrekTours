@@ -80,6 +80,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
+    //For client login 
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
   }
