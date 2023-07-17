@@ -6,6 +6,7 @@
  * 4. Express reading static files(html, css, etc.)
  * 5. Defines the root routes for each resource
  */
+const path = require('path');
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
@@ -15,6 +16,7 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require('xss-clean')
 const hpp = require('hpp')
+const cookieParser = require('cookie-parser')
 
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
@@ -22,13 +24,25 @@ const globalErrorHandler = require("./controllers/errorController");
 const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
 const reviewRouter = require("./routes/reviewRoutes");
+const viewRouter = require("./routes/viewRoutes");
+
+//Template Engine
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+
+/**
+ * Serves static files
+ */
+app.use(express.static(path.join(__dirname, 'public'))); //using public folder for accessing the front-end
 
 // Global middleware
 
 /**
  * Sets Security HTTP headers
  */
+// app.use(helmet({contentSecurityPolicy: false}));
 app.use(helmet());
+
 
 /**
  * Sets logging info output in development environment
@@ -47,13 +61,13 @@ const limiter = rateLimit({
 });
 app.use("/api", limiter);
 
-
 //Express middleware
 
 /**
  * Body parser: Parses data from body into req.body, size < 10kb
  */
 app.use(express.json({limit: '10kb'}));
+app.use(cookieParser());
 
 /**
  * Data sanitization again noSQL query injection
@@ -82,21 +96,18 @@ app.use(
     ],
   })
 ); 
-/**
- * Serves static files
- */
-app.use(express.static(`${__dirname}/public`)); //using public folder for accessing the front-end
 
 /**
  * Test middleware
  */
 app.use((req, res, next) => {
   request.requestTime = new Date().toISOString();
-  console.log(req.headers);
+  console.log(req.cookies);
   next();
 });
 
 
+app.use("/", viewRouter);
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/reviews", reviewRouter);
