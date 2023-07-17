@@ -141,6 +141,8 @@ app.use(
  */
 app.use((req, res, next) => {
   request.requestTime = new Date().toISOString();
+
+  //test cookie in browser
   console.log(req.cookies);
   next();
 });
