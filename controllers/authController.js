@@ -54,6 +54,7 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
+// Log in
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body; //varialbe name same as the property name, use destructuring
 
@@ -72,6 +73,16 @@ exports.login = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
+// Log out
+exports.logout = (req, res) => {
+  res.cookie("jwt", "loggedout", {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+  res.status(200).json({ status: "success" });
+};
+
+//Protect
 exports.protect = catchAsync(async (req, res, next) => {
   // 1. Get the token and check if it exists
   let token;
@@ -212,24 +223,27 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 });
 
 // Only for the view
-exports.isLoggedIn = catchAsync(async (req, res, next) => {
+exports.isLoggedIn = async (req, res, next) => {
   if (req.cookies.jwt) {
-    const decoded = await promisify(jwt.verify)(
-      req.cookies.jwt,
-      process.env.JWT_SECRET
-    );
+    try {
+      const decoded = await promisify(jwt.verify)(
+        req.cookies.jwt,
+        process.env.JWT_SECRET
+      );
 
-    const currentUser = await User.findById(decoded.id);
-    if (!currentUser) return next();
+      const currentUser = await User.findById(decoded.id);
+      if (!currentUser) return next();
 
-    // check if user change password after the token is issued
-    if (currentUser.changePasswordAfter(decoded.iat)) {
+      // check if user change password after the token is issued
+      if (currentUser.changePasswordAfter(decoded.iat)) {
+        return next();
+      }
+
+      // Grant access to the pretected
+      res.locals.user = currentUser;
+    } catch (err) {
       return next();
     }
-
-    // Grant access to the pretected
-    res.locals.user = currentUser;
-    return next();
   }
   next();
-});
+};
