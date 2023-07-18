@@ -27,7 +27,7 @@ const login = async (email, password) => {
   }
 };
 
-const loginForm = document.querySelector('.form'); 
+const loginForm = document.querySelector('.form--login'); 
 if(loginForm){
 
   loginForm.addEventListener('submit', e =>{

@@ -108,6 +108,7 @@ app.use("/api", limiter);
  * Body parser: Parses data from body into req.body, size < 10kb
  */
 app.use(express.json({limit: '10kb'}));
+app.use(express.urlencoded({extended: true, limit: '10kb'}));
 app.use(cookieParser());
 
 /**
@@ -145,7 +146,7 @@ app.use((req, res, next) => {
   request.requestTime = new Date().toISOString();
 
   //test cookie in browser
-  console.log(req.cookies);
+  //console.log(req.cookies);
   next();
 });
 
