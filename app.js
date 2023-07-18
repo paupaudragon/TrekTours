@@ -41,7 +41,7 @@ app.use(express.static(path.join(__dirname, 'public'))); //using public folder f
 /**
  * Sets Security HTTP headers
  */
-// app.use(helmet({contentSecurityPolicy: false}));
+app.use(helmet());
 app.use(
 
   helmet.contentSecurityPolicy({
@@ -60,6 +60,8 @@ app.use(
 
       scriptSrc: ["'self'", 'http:', 'https://*.mapbox.com', 'data:'],
 
+      scriptSrc: ["'self'", 'http:', 'https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js'],
+
       frameSrc: ["'self'", 'https://*.stripe.com'],
 
       objectSrc: ["'none'"],
@@ -72,7 +74,7 @@ app.use(
 
       imgSrc: ["'self'", 'data:', 'blob:'],
 
-      connectSrc: ["'self'", 'blob:', 'https://*.mapbox.com'],
+      connectSrc: ["'self'", 'blob:', 'https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js'],
 
       upgradeInsecureRequests: []
 
