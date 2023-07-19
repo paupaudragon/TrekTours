@@ -15,7 +15,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
   //Create a new user
   const newUser = await User.create(req.body);
 
-  const url = `${req.protocol}://${req.get('host')}/me`; 
+  const url = `${req.protocol}://${req.get("host")}/me`;
   console.log(url);
   await new Email(newUser, url).sendWelcome();
   createSendToken(newUser, 201, res);
@@ -145,18 +145,13 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   await user.save({ validateBeforeSave: false }); //Important: disbale all the validators, or passwordReset token and expire will not bu sved in the db
 
   // 3. sent it to the user
-  const resetURL = `${req.protocol}://${req.get(
-    "host"
-  )}/api/v1/users/resetPassword/${resetToken}`;
-  const message = `Forget password? Submit a PATCH request with your new password and passwordConfirm tp : ${resetURL}. 
-  \nIf you didn't forget your password, please ignore this email.`;
 
   try {
-    // await sendEmail({
-    //   email: user.email,
-    //   subject: "Your password reset token(valid for 10 minutes)",
-    //   message,
-    // });
+    const resetURL = `${req.protocol}://${req.get(
+      "host"
+    )}/api/v1/users/resetPassword/${resetToken}`;
+
+    await new Email(user, resetURL).sendPasswrodReset();
 
     res.status(200).json({
       status: "success",

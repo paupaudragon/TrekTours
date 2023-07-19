@@ -55,5 +55,9 @@ module.exports = class Email {
     async sendWelcome(){
         await this.send('welcome', 'Welcome to the Trek Tour Family!'); 
     }
+
+    async sendPasswrodReset(){
+        await this.send('PasswordReset', 'Your Password Reset token (valid for 10 minutes')
+    }
 }
 
