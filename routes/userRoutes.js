@@ -1,6 +1,8 @@
 const express = require("express");
+const multer = require("multer");
 const userController = require("./../controllers/userController");
 const authController = require("./../controllers/authController");
+
 const router = express.Router();
 
 router.post("/signup", authController.signUp);
@@ -12,21 +14,14 @@ router.patch("/resetPassword/:token", authController.resetPassword);
 // All routes need to run protect from this point.
 router.use(authController.protect);
 
-router.patch(
-  "/updateMyPassword",
-  authController.updatePassword
-);
+router.patch("/updateMyPassword", authController.updatePassword);
 
-router.get(
-  "/me",
-  userController.getMe,
-  userController.getAUser
-);
-router.patch("/updateMe",  userController.updateMe);
+router.get("/me", userController.getMe, userController.getAUser);
+router.patch("/updateMe", userController.uploadUserPhoto, userController.resizeUserPhoto,userController.updateMe);
 router.delete("/deleteMe", userController.deleteMe);
 
 // Only admin can do anything after this point
-router.use(authController.restrictTo('admin'));
+router.use(authController.restrictTo("admin"));
 router
   .route("/")
   .get(userController.getAllUsers)
