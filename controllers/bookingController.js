@@ -1,4 +1,5 @@
 const Tour = require("./../models/tourModel");
+const Booking = require("./../models/bookingModel");
 const APIFeatures = require("./../utils/apiFeatures");
 const catchAsync = require("./../utils/catchAsync");
 const factory = require("./handlerFactory");
@@ -12,7 +13,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   // 2) Create checkout session
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
-    success_url: `${req.protocol}://${req.get("host")}/`,
+    success_url: `${req.protocol}://${req.get("host")}/?tour=${req.params.tourId}&user=${req.user.id}&price=${tour.price}`,
     cancel_url: `${req.protocol}://${req.get("host")}/tour/${tour.slug}`,
     customer_email: req.user.email,
     client_reference_id: req.params.tourId,
@@ -39,3 +40,13 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     session,
   });
 });
+
+exports.createBookingCheckout = catchAsync(async (req, res, next)=>{
+  const {tour, user, price} = req.query; 
+  if(!tour || !user || !price) return next(); 
+  await Booking.create({tour, user, price}); 
+  
+  // Hide query string from url 
+  res.redirect(req.originalUrl.split('?')[0]);
+
+})
