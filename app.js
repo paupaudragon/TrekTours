@@ -25,6 +25,7 @@ const globalErrorHandler = require("./controllers/errorController");
 const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
 const reviewRouter = require("./routes/reviewRoutes");
+const bookingRouter = require("./routes/bookingRoutes");
 const viewRouter = require("./routes/viewRoutes");
 
 //Template Engine
@@ -54,13 +55,21 @@ app.use(
 
       fontSrc: ["'self'", 'https:', 'data:'],
 
-      scriptSrc: ["'self'", 'https://*.cloudflare.com'],
+      scriptSrc: [
+        "'self'", 
+        'https:',
+        'http',
+        'blob',
+        'https://*.mapbox.com',
+        'https://*.stripe.com',
+      'https://*.cloudflare.com'
+    ],
 
-      scriptSrc: ["'self'", 'https://*.stripe.com'],
+      // scriptSrc: ["'self'", 'https://*.stripe.com'],
 
-      scriptSrc: ["'self'", 'http:', 'https://*.mapbox.com', 'data:'],
+      // scriptSrc: ["'self'", 'http:', 'https://*.mapbox.com', 'data:'],
 
-      scriptSrc: ["'self'", 'http:', 'https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js'],
+      // scriptSrc: ["'self'", 'http:', 'https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js'],
 
       frameSrc: ["'self'", 'https://*.stripe.com'],
 
@@ -155,6 +164,7 @@ app.use("/", viewRouter);
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/reviews", reviewRouter);
+app.use("/api/v1/bookings", bookingRouter);
 
 //all means all verbs api(get, post, ...)
 //* all urls
