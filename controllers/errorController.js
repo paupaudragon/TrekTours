@@ -21,7 +21,6 @@ const handleDuplicateFieldsDB = (err) => {
 const handleCastErrorDB = (err) => {
   const message = `Invalid ${err.path}: ${err.value}.`;
   const error = new AppError(message, 400);
-  console.log("here");
   console.log(error.isOperational);
   return error;
 };
@@ -68,7 +67,7 @@ const sendErrorProd = (err, req, res) => {
   // B) RENDERED WEBSITE
   // A) Operational, trusted error: send message to client
   if (err.isOperational) {
-    console.log(err);
+    //console.log(err);
     return res.status(err.statusCode).render('error', {
       title: 'Something went wrong!',
       msg: err.message
@@ -76,7 +75,7 @@ const sendErrorProd = (err, req, res) => {
   }
   // B) Programming or other unknown error: don't leak error details
   // 1) Log error
-  console.error('ERROR 💥', err);
+  //console.error('ERROR 💥', err);
   // 2) Send generic message
   return res.status(err.statusCode).render('error', {
     title: 'Something went wrong!',
@@ -85,7 +84,7 @@ const sendErrorProd = (err, req, res) => {
 };
 
 module.exports = (err, req, res, next) => {
-  console.log(process.env.NODE_ENV);
+  //console.log(process.env.NODE_ENV);
 
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";

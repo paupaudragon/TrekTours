@@ -18,6 +18,7 @@ const xss = require('xss-clean')
 const hpp = require('hpp')
 //for browser login 
 const cookieParser = require('cookie-parser')
+const compression = require('compression')
 
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
@@ -110,6 +111,8 @@ const limiter = rateLimit({
   message: "Too many requests from this IP, please try in an hour.",
 });
 app.use("/api", limiter);
+
+app.use(compression());
 
 //Express middleware
 

@@ -28,7 +28,7 @@ mongoose.connect(DB, {
 
 const app = require('./app')
 
-console.log(app.get('env'))
+//console.log(app.get('env'))
 // console.log(process.env)
 
 //start the server
