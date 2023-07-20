@@ -18,10 +18,6 @@ module.exports = class Email {
             // Sendgrig
             return  nodemailer.createTransport(
                 {service: 'SendGrid',
-                // nodemailerSendgrid({
-                //     apikey:'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'
-                // })
-
                 auth: {
                     user: process.env.SENDGRID_USERNAME, 
                     pass: process.env.SENDGRID_PASSWORD
