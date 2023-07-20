@@ -1,5 +1,4 @@
 node_modules
-public/img
 *.env
 *.cache
 *.parcel-cache
